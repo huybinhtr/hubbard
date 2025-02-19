@@ -42,6 +42,17 @@ class Hubbard1DModel:
         return FermionHamiltonian(2 * L, [Term(1.0, "Cc", [index, index])])
 
     @staticmethod
+    def total_number_operator(L):
+        """Construct the total number operator for all sites."""
+        nqbits = 2 * L
+        terms = []
+        for i in range(L):
+            # Spin-up and spin-down number operators for site i
+            terms.append(Term(1.0, "Cc", [2 * i, 2 * i]))  
+            terms.append(Term(1.0, "Cc", [2 * i + 1, 2 * i + 1]))  
+        return FermionHamiltonian(nqbits, terms)
+
+    @staticmethod
     def double_occupancy_operator(L):
         nqbits = 2 * L
         terms = []
@@ -59,11 +70,10 @@ class Hubbard1DModel:
 
     @staticmethod
     def compute_electron_number(ground_state, L):
-        n_total = 0
-        for i in range(L):
-            n_up = np.real(np.vdot(ground_state, Hubbard1DModel.number_operator(L, 2 * i).get_matrix() @ ground_state))
-            n_down = np.real(np.vdot(ground_state, Hubbard1DModel.number_operator(L, 2 * i + 1).get_matrix() @ ground_state))
-            n_total += n_up + n_down
+        """Compute the total electron number using the total number operator."""
+        N_op = Hubbard1DModel.total_number_operator(L)
+        N_matrix = N_op.get_matrix()
+        n_total = np.real(np.vdot(ground_state, N_matrix @ ground_state))
         return n_total
 
     @staticmethod
