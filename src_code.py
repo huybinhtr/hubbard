@@ -8,6 +8,23 @@ import os
 
 t = 1  # Hopping amplitude
 
+class Householder:
+    @staticmethod
+    def P(x, y):
+        x, y = np.asarray(x, dtype=np.float64), np.asarray(y, dtype=np.float64)
+        alpha = np.linalg.norm(x) / np.linalg.norm(y)
+        v = x - alpha * y
+        v /= np.linalg.norm(v) if np.linalg.norm(v) != 0 else 1
+        return np.identity(v.size) - 2 * np.outer(v, v)
+
+    @staticmethod
+    def hermitian_check(mat):
+        return np.allclose(mat, mat.T)
+
+    @staticmethod
+    def unitary_check(mat):
+        return np.allclose(np.eye(mat.shape[0]), mat @ mat.T)
+
 class Hubbard1DModel:
     @staticmethod
     def t_mat_1D(L: int, pbc: bool = False) -> np.ndarray:
