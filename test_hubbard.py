@@ -1,26 +1,22 @@
 import numpy as np
-from src_code import hubbard_1Dmodel
+from src_code import Hubbard1DModel
 import os
 
 # Define system parameters
-L = 4  
-U_values = np.linspace(0, 8, 20) 
+L = 4
+U_values = np.linspace(0, 8, 20)  # Generates 20 values between 0 and 8
 
-
-target_occupancies = [1] # chage here  1/2 and 2/3
-
-
+# Ensure the data folder exists
 data_folder = 'data'
 if not os.path.exists(data_folder):
     os.makedirs(data_folder)
 
+# Compute double occupancy
+results = Hubbard1DModel.compute_double_occupancy(U_values, L=L)
 
-for target_occupancy in target_occupancies:
+# Save results to a CSV file
+filename = f"double_occupancy_results.csv"
+file_path = os.path.join(data_folder, filename)
+Hubbard1DModel.save_results_to_csv(results, file_path)
 
-    results = hubbard_1Dmodel.compute_double_occupancy(U_values, L, target_occupancy)
-    
-
-    filename = f"double_occupancy_results_{target_occupancy}.csv"
-    file_path = os.path.join(data_folder, filename)  
-    hubbard_1Dmodel.save_results_to_csv(results, file_path)
-    print(f"Results saved to: {file_path}")
+print(f"Results saved to: {file_path}")
