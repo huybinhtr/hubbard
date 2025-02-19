@@ -10,7 +10,7 @@ P_matrix = Householder.P(X, Y)
 print("P_matrix:")
 print(P_matrix)
 
-# Compute P @ X
+# Compute P @ X to check if the Householder matrix is correct Y=PX
 PX = P_matrix @ X
 print("PX:", PX)
 
